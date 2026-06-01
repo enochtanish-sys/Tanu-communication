@@ -1,0 +1,380 @@
+{% extends 'communicate/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard — SilentSpeak{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+
+      <div class="brand-box">
+        <div class="brand-icon">
+
+          <svg viewBox="0 0 60 60" fill="none">
+            <circle cx="30"
+                    cy="30"
+                    r="28"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    opacity="0.15"/>
+
+            <circle cx="30"
+                    cy="31"
+                    r="4"
+                    fill="currentColor"/>
+
+            <path d="M30 39 L30 47"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"/>
+
+            <path d="M24 47 L36 47"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"/>
+
+            <path d="M44 24 Q50 30 44 36"
+                  stroke="var(--accent)"
+                  stroke-width="2"
+                  fill="none"/>
+          </svg>
+
+        </div>
+
+        <div>
+          <h2 class="sidebar-logo">
+            SilentSpeak
+          </h2>
+
+          <p class="sidebar-subtitle">
+            Communication Assistant
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}"
+           class="nav-link active">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+            <rect x="3"
+                  y="3"
+                  width="7"
+                  height="7"/>
+            <rect x="14"
+                  y="3"
+                  width="7"
+                  height="7"/>
+            <rect x="3"
+                  y="14"
+                  width="7"
+                  height="7"/>
+            <rect x="14"
+                  y="14"
+                  width="7"
+                  height="7"/>
+          </svg>
+
+          Dashboard
+        </a>
+
+        <a href="{% url 'history' %}"
+           class="nav-link">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+            <polyline points="12 8 12 12 14 14"/>
+            <path d="M3.05 11a9 9 0 1 0 .5-4.5"/>
+          </svg>
+
+          Message History
+        </a>
+
+      </nav>
+    </div>
+
+    <!-- User -->
+    <div class="sidebar-user">
+
+      <div class="user-avatar">
+        {{ request.user.username|first|upper }}
+      </div>
+
+      <div class="user-info">
+        <h4>
+          {{ request.user.first_name|default:request.user.username }}
+        </h4>
+
+        <span>
+          {{ profile.get_role_display }}
+        </span>
+      </div>
+
+      <a href="{% url 'logout' %}"
+         class="logout-btn">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21"
+                y1="12"
+                x2="9"
+                y2="12"/>
+        </svg>
+      </a>
+
+    </div>
+
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+
+      <div>
+        <h1 class="dashboard-title">
+          Communication Board
+        </h1>
+
+        <p class="dashboard-subtitle">
+          Type a message and speak instantly
+        </p>
+      </div>
+
+      <div class="tts-status">
+
+        <span class="status-dot"
+              id="ttsStatus"></span>
+
+        <span id="ttsStatusText">
+          Ready
+        </span>
+
+      </div>
+
+    </header>
+
+    <!-- Communication Card -->
+    <section class="speak-card">
+
+      <div class="card-header">
+
+        <div>
+          <h2>Your Message</h2>
+          <p>
+            Write what you want to say
+          </p>
+        </div>
+
+        <div class="char-counter">
+          <span id="charCount">0</span>/500
+        </div>
+
+      </div>
+
+      <!-- Textarea -->
+      <textarea
+        id="messageInput"
+        class="message-input"
+        placeholder="Type your message here..."
+        maxlength="500"
+        rows="5"
+        autofocus
+      ></textarea>
+
+      <!-- Voice Settings -->
+      <div class="voice-controls">
+
+        <div class="voice-group">
+
+          <label>Voice</label>
+
+          <select
+            id="voiceSelect"
+            class="voice-select"
+          >
+            <option value="">
+              Loading voices...
+            </option>
+          </select>
+
+        </div>
+
+        <div class="voice-group">
+
+          <label>
+            Speed:
+            <span id="speedVal">
+              1.0×
+            </span>
+          </label>
+
+          <input
+            type="range"
+            id="speedRange"
+            min="0.5"
+            max="2"
+            step="0.1"
+            value="1"
+          >
+
+        </div>
+
+        <div class="voice-group">
+
+          <label>
+            Pitch:
+            <span id="pitchVal">
+              1.0
+            </span>
+          </label>
+
+          <input
+            type="range"
+            id="pitchRange"
+            min="0.5"
+            max="2"
+            step="0.1"
+            value="1"
+          >
+
+        </div>
+
+      </div>
+
+      <!-- Actions -->
+      <div class="action-buttons">
+
+        <button
+          class="btn-secondary"
+          id="clearBtn"
+        >
+          Clear
+        </button>
+
+        <button
+          class="btn-secondary"
+          id="stopBtn"
+        >
+          Stop
+        </button>
+
+        <button
+          class="btn-primary speak-btn"
+          id="speakBtn"
+        >
+          Speak Now
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- Quick Phrases -->
+    <section class="quick-phrases-card">
+
+      <div class="section-header">
+        <h2>Quick Phrases</h2>
+        <p>Tap to insert a phrase</p>
+      </div>
+
+      <div class="phrases-grid"
+           id="phrasesGrid">
+
+        <button class="phrase-btn">
+          Hello! How are you?
+        </button>
+
+        <button class="phrase-btn">
+          Yes, please.
+        </button>
+
+        <button class="phrase-btn">
+          No, thank you.
+        </button>
+
+        <button class="phrase-btn">
+          I need help.
+        </button>
+
+        <button class="phrase-btn">
+          Please wait.
+        </button>
+
+        <button class="phrase-btn">
+          I understand.
+        </button>
+
+        <button class="phrase-btn">
+          Can you repeat that?
+        </button>
+
+        <button class="phrase-btn">
+          I need water.
+        </button>
+
+        <button class="phrase-btn">
+          Call my family.
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- Recent Messages -->
+    {% if recent_logs %}
+    <section class="recent-messages">
+
+      <div class="section-header">
+        <h2>Recent Messages</h2>
+      </div>
+
+      <div class="recent-list">
+
+        {% for log in recent_logs %}
+        <div class="recent-item"
+             data-text="{{ log.original_text }}">
+
+          <p class="recent-text">
+            {{ log.original_text|truncatechars:60 }}
+          </p>
+
+          <button
+            class="recent-replay"
+            title="Speak again"
+          >
+            Replay
+          </button>
+
+        </div>
+        {% endfor %}
+
+      </div>
+
+    </section>
+    {% endif %}
+
+  </main>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'communicate/js/dashboard.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,232 @@
+{% extends 'communicate/base.html' %}
+{% block title %}Sign In — SilentSpeak{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+
+  <!-- Left Side Branding -->
+  <section class="auth-left">
+
+    <div class="brand-container">
+
+      <div class="brand-logo">
+
+        <svg viewBox="0 0 60 60" fill="none">
+          <circle cx="30" cy="30" r="28"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  opacity="0.15"/>
+
+          <path d="M18 22 Q30 14 42 22
+                   L42 36
+                   Q30 46 18 36 Z"
+                fill="currentColor"
+                opacity="0.08"/>
+
+          <path d="M22 28
+                   Q30 22 38 28
+                   L38 34
+                   Q30 40 22 34 Z"
+                fill="currentColor"
+                opacity="0.35"/>
+
+          <circle cx="30" cy="31"
+                  r="4"
+                  fill="currentColor"/>
+
+          <path d="M30 39 L30 47"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"/>
+
+          <path d="M24 47 L36 47"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"/>
+
+          <path d="M44 24 Q50 30 44 36"
+                stroke="var(--accent)"
+                stroke-width="2"
+                fill="none"/>
+
+          <path d="M47 21 Q56 30 47 39"
+                stroke="var(--accent)"
+                stroke-width="1.5"
+                opacity="0.5"
+                fill="none"/>
+        </svg>
+
+      </div>
+
+      <h1 class="brand-title">SilentSpeak</h1>
+
+      <p class="brand-subtitle">
+        A simple and accessible way to communicate
+        without barriers.
+      </p>
+
+      <div class="feature-list">
+
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Instant text-to-speech
+        </div>
+
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Quick communication phrases
+        </div>
+
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Save message history
+        </div>
+
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Designed for accessibility
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Right Side Form -->
+  <section class="auth-right">
+
+    <div class="auth-card">
+
+      <div class="auth-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to continue using SilentSpeak</p>
+      </div>
+
+      <form
+        method="post"
+        class="auth-form"
+        id="loginForm"
+        novalidate
+      >
+        {% csrf_token %}
+
+        <!-- Username -->
+        <div class="form-group">
+
+          <label for="{{ form.username.id_for_label }}">
+            Username
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-icon">
+              <svg viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+
+            {{ form.username }}
+
+          </div>
+
+          {% if form.username.errors %}
+          <span class="field-error">
+            {{ form.username.errors|first }}
+          </span>
+          {% endif %}
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+
+          <label for="{{ form.password.id_for_label }}">
+            Password
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-icon">
+              <svg viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <rect x="3"
+                      y="11"
+                      width="18"
+                      height="11"
+                      rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+
+            {{ form.password }}
+
+            <button
+              type="button"
+              class="toggle-password"
+              aria-label="Toggle Password"
+            >
+              👁
+            </button>
+
+          </div>
+
+          {% if form.password.errors %}
+          <span class="field-error">
+            {{ form.password.errors|first }}
+          </span>
+          {% endif %}
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="btn-primary btn-full"
+          id="submitBtn"
+        >
+          <span class="btn-text">
+            Sign In
+          </span>
+        </button>
+
+      </form>
+
+      <!-- Footer -->
+      <div class="auth-footer">
+        <p>
+          Don’t have an account?
+          <a href="{% url 'register' %}" class="auth-link">
+            Create one
+          </a>
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.toggle-password').forEach(btn => {
+  btn.addEventListener('click', () => {
+
+    const input =
+      btn.parentElement.querySelector('input');
+
+    if (!input) return;
+
+    input.type =
+      input.type === 'password'
+      ? 'text'
+      : 'password';
+  });
+});
+</script>
+{% endblock %}

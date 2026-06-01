@@ -1,0 +1,349 @@
+{% extends 'communicate/base.html' %}
+{% block title %}Create Account — SilentSpeak{% endblock %}
+
+{% block content %}
+<div class="auth-page register-page">
+
+  <!-- Left Branding -->
+  <section class="auth-left">
+
+    <div class="brand-container">
+
+      <div class="brand-logo">
+
+        <svg viewBox="0 0 60 60" fill="none">
+          <circle cx="30"
+                  cy="30"
+                  r="28"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  opacity="0.15"/>
+
+          <circle cx="30"
+                  cy="31"
+                  r="4"
+                  fill="currentColor"/>
+
+          <path d="M30 39 L30 47"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"/>
+
+          <path d="M24 47 L36 47"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"/>
+
+          <path d="M44 24 Q50 30 44 36"
+                stroke="var(--accent)"
+                stroke-width="2"
+                fill="none"/>
+        </svg>
+
+      </div>
+
+      <h1 class="brand-title">
+        SilentSpeak
+      </h1>
+
+      <p class="brand-subtitle">
+        Join a communication platform designed
+        for accessibility and inclusion.
+      </p>
+
+      <div class="feature-list">
+
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Speak through text instantly
+        </div>
+
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Save communication history
+        </div>
+
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Easy quick phrases
+        </div>
+
+        <div class="feature-item">
+          <span class="feature-dot"></span>
+          Inclusive communication support
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Register Form -->
+  <section class="auth-right">
+
+    <div class="auth-card register-card">
+
+      <div class="auth-header">
+        <h2>Create Account</h2>
+        <p>Start communicating without barriers</p>
+      </div>
+
+      <form
+        method="post"
+        class="auth-form"
+        novalidate
+      >
+        {% csrf_token %}
+
+        <!-- Names -->
+        <div class="form-row">
+
+          <div class="form-group">
+            <label>First Name</label>
+
+            <div class="input-group">
+
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </span>
+
+              {{ form.first_name }}
+            </div>
+
+            {% if form.first_name.errors %}
+            <span class="field-error">
+              {{ form.first_name.errors|first }}
+            </span>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label>Last Name</label>
+
+            <div class="input-group">
+
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </span>
+
+              {{ form.last_name }}
+            </div>
+
+            {% if form.last_name.errors %}
+            <span class="field-error">
+              {{ form.last_name.errors|first }}
+            </span>
+            {% endif %}
+          </div>
+
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+
+          <label>Email Address</label>
+
+          <div class="input-group">
+
+            <span class="input-icon">
+              <svg viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </span>
+
+            {{ form.email }}
+
+          </div>
+
+          {% if form.email.errors %}
+          <span class="field-error">
+            {{ form.email.errors|first }}
+          </span>
+          {% endif %}
+        </div>
+
+        <!-- Username -->
+        <div class="form-group">
+
+          <label>Username</label>
+
+          <div class="input-group">
+
+            <span class="input-icon">
+              <svg viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                <path d="M4.93 4.93a10 10 0 0 0 0 14.14"/>
+              </svg>
+            </span>
+
+            {{ form.username }}
+
+          </div>
+
+          {% if form.username.errors %}
+          <span class="field-error">
+            {{ form.username.errors|first }}
+          </span>
+          {% endif %}
+        </div>
+
+        <!-- Passwords -->
+        <div class="form-row">
+
+          <div class="form-group">
+            <label>Password</label>
+
+            <div class="input-group">
+              {{ form.password1 }}
+
+              <button
+                type="button"
+                class="toggle-password"
+              >
+                👁
+              </button>
+            </div>
+
+            {% if form.password1.errors %}
+            <span class="field-error">
+              {{ form.password1.errors|first }}
+            </span>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label>Confirm Password</label>
+
+            <div class="input-group">
+              {{ form.password2 }}
+
+              <button
+                type="button"
+                class="toggle-password"
+              >
+                👁
+              </button>
+            </div>
+
+            {% if form.password2.errors %}
+            <span class="field-error">
+              {{ form.password2.errors|first }}
+            </span>
+            {% endif %}
+          </div>
+
+        </div>
+
+        <!-- Role -->
+        <div class="form-group">
+
+          <label>I am a...</label>
+
+          <div class="role-grid">
+
+            {% for radio in form.role %}
+            <label
+              class="role-card"
+              for="{{ radio.id_for_label }}"
+            >
+
+              {{ radio.tag }}
+
+              {% if radio.data.value == 'mute' %}
+                <div class="role-title">
+                  Speech-Impaired User
+                </div>
+
+                <div class="role-description">
+                  I need assistance speaking
+                </div>
+              {% else %}
+                <div class="role-title">
+                  Helper / Listener
+                </div>
+
+                <div class="role-description">
+                  I assist another user
+                </div>
+              {% endif %}
+
+            </label>
+            {% endfor %}
+
+          </div>
+
+          {% if form.role.errors %}
+          <span class="field-error">
+            {{ form.role.errors|first }}
+          </span>
+          {% endif %}
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="btn-primary btn-full"
+        >
+          Create Account
+        </button>
+
+      </form>
+
+      <div class="auth-footer">
+        <p>
+          Already have an account?
+          <a
+            href="{% url 'login' %}"
+            class="auth-link"
+          >
+            Sign In
+          </a>
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.toggle-password')
+.forEach(btn => {
+  btn.addEventListener('click', () => {
+
+    const input =
+      btn.parentElement.querySelector('input');
+
+    if (!input) return;
+
+    input.type =
+      input.type === 'password'
+      ? 'text'
+      : 'password';
+  });
+});
+</script>
+{% endblock %}

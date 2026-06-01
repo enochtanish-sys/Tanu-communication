@@ -1,0 +1,283 @@
+{% extends 'communicate/base.html' %}
+{% block title %}History — SilentSpeak{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+
+      <div class="brand-box">
+
+        <div class="brand-icon">
+          <svg viewBox="0 0 60 60" fill="none">
+            <circle cx="30"
+                    cy="30"
+                    r="28"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    opacity="0.15"/>
+
+            <circle cx="30"
+                    cy="31"
+                    r="4"
+                    fill="currentColor"/>
+
+            <path d="M30 39 L30 47"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"/>
+
+            <path d="M24 47 L36 47"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"/>
+
+            <path d="M44 24 Q50 30 44 36"
+                  stroke="var(--accent)"
+                  stroke-width="2"
+                  fill="none"/>
+          </svg>
+        </div>
+
+        <div>
+          <h2 class="sidebar-logo">
+            SilentSpeak
+          </h2>
+
+          <p class="sidebar-subtitle">
+            Communication Assistant
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}"
+           class="nav-link">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+            <rect x="3"
+                  y="3"
+                  width="7"
+                  height="7"/>
+            <rect x="14"
+                  y="3"
+                  width="7"
+                  height="7"/>
+            <rect x="3"
+                  y="14"
+                  width="7"
+                  height="7"/>
+            <rect x="14"
+                  y="14"
+                  width="7"
+                  height="7"/>
+          </svg>
+
+          Dashboard
+        </a>
+
+        <a href="{% url 'history' %}"
+           class="nav-link active">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+            <polyline points="12 8 12 12 14 14"/>
+            <path d="M3.05 11a9 9 0 1 0 .5-4.5"/>
+          </svg>
+
+          Message History
+        </a>
+
+      </nav>
+
+    </div>
+
+    <!-- User -->
+    <div class="sidebar-user">
+
+      <div class="user-avatar">
+        {{ request.user.username|first|upper }}
+      </div>
+
+      <div class="user-info">
+
+        <h4>
+          {{ request.user.first_name|default:request.user.username }}
+        </h4>
+
+        <span>
+          History
+        </span>
+
+      </div>
+
+      <a href="{% url 'logout' %}"
+         class="logout-btn">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21"
+                y1="12"
+                x2="9"
+                y2="12"/>
+        </svg>
+
+      </a>
+
+    </div>
+
+  </aside>
+
+  <!-- Main -->
+  <main class="dashboard-main">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+
+      <div>
+
+        <h1 class="dashboard-title">
+          Message History
+        </h1>
+
+        <p class="dashboard-subtitle">
+          {{ logs.count }}
+          message{{ logs.count|pluralize }}
+          saved
+        </p>
+
+      </div>
+
+      <a href="{% url 'dashboard' %}"
+         class="btn-secondary">
+
+        ← Back to Board
+
+      </a>
+
+    </header>
+
+    <!-- History List -->
+    <section class="history-section">
+
+      {% if logs %}
+
+      <div class="history-grid">
+
+        {% for log in logs %}
+        <div class="history-card"
+             data-text="{{ log.original_text }}">
+
+          <div class="history-content">
+
+            <p class="history-message">
+              {{ log.original_text }}
+            </p>
+
+          </div>
+
+          <div class="history-footer">
+
+            <span class="history-time">
+              {{ log.created_at|date:"M d, Y · H:i" }}
+            </span>
+
+            <button
+              class="btn-replay"
+              title="Replay"
+            >
+              Replay
+            </button>
+
+          </div>
+
+        </div>
+        {% endfor %}
+
+      </div>
+
+      {% else %}
+
+      <!-- Empty State -->
+      <div class="empty-state">
+
+        <div class="empty-icon">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+
+        </div>
+
+        <h2>
+          No messages yet
+        </h2>
+
+        <p>
+          Start communicating and your messages
+          will appear here.
+        </p>
+
+        <a href="{% url 'dashboard' %}"
+           class="btn-primary">
+
+          Go to Board
+
+        </a>
+
+      </div>
+
+      {% endif %}
+
+    </section>
+
+  </main>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.btn-replay')
+.forEach(btn => {
+
+  btn.addEventListener('click', () => {
+
+    const text =
+      btn.closest('.history-card')
+      .dataset.text;
+
+    if ('speechSynthesis' in window) {
+
+      speechSynthesis.cancel();
+
+      const utterance =
+        new SpeechSynthesisUtterance(text);
+
+      utterance.rate = 1;
+      utterance.pitch = 1;
+
+      speechSynthesis.speak(utterance);
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>{% block title %}SilentSpeak{% endblock %}</title>
+
+  {% load static %}
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="{% static 'communicate/css/main.css' %}">
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body class="app-body">
+
+  <!-- Background -->
+  <div class="background-wrapper">
+    <div class="gradient-orb orb-one"></div>
+    <div class="gradient-orb orb-two"></div>
+    <div class="gradient-orb orb-three"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Page Wrapper -->
+  <div class="page-wrapper">
+
+    <!-- Toast Messages -->
+    {% if messages %}
+    <div class="toast-container" id="toastContainer">
+      {% for message in messages %}
+      <div class="toast toast-{{ message.tags }}">
+        <div class="toast-icon">
+          {% if 'error' in message.tags %}
+            ⚠
+          {% elif 'success' in message.tags %}
+            ✓
+          {% else %}
+            ℹ
+          {% endif %}
+        </div>
+
+        <div class="toast-content">
+          {{ message }}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="main-page-content">
+      {% block content %}
+      {% endblock %}
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="{% static 'communicate/js/main.js' %}"></script>
+
+  {% block extra_js %}
+  {% endblock %}
+
+</body>
+</html>

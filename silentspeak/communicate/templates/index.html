@@ -1,0 +1,28 @@
+{% extends 'communicate/base.html' %}
+
+{% block title %}Home - SilentSpeak{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="hero">
+        <h1>Welcome to SilentSpeak</h1>
+        <p>
+            SilentSpeak helps bridge communication between sign language
+            and text through AI-powered translation.
+        </p>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="btn btn-primary">
+                Go to Dashboard
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary">
+                Login
+            </a>
+            <a href="{% url 'register' %}" class="btn btn-secondary">
+                Register
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
